@@ -1,6 +1,7 @@
 # Nim language workout
 
-https://nim-lang.org/
+* https://nim-lang.org/
+  * https://narimiran.github.io/nim-basics/
 
 * backed with C source-level translation:
   * portable
