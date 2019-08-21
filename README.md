@@ -5,6 +5,6 @@
 
 * backed with C source-level translation:
   * portable
-  * corporate/production friendly
+  * corporate/production friendly (unreadable code?)
   * applicable for low-end embedded systems
 * metaprogramming
