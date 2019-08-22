@@ -9,6 +9,7 @@ GCC_VER			= 9.2.0
 GMP_VER			= 6.1.2
 MPFR_VER		= 4.0.2
 MPC_VER			= 1.1.0
+NEWLIB_VER		= 3.1.0
 
 BINUTILS	= binutils-$(BINUTILS_VER)
 BINUTILS_GZ	= $(BINUTILS).tar.xz
@@ -24,6 +25,9 @@ MPFR_GZ		= $(MPFR).tar.xz
 
 MPC			= mpc-$(MPC_VER)
 MPC_GZ		= $(MPC).tar.gz
+
+NEWLIB		= newlib-$(NEWLIB_VER)
+NEWLIB_GZ	= $(NEWLIB).tar.gz
 
 CWD = $(CURDIR)
 GZ  = $(CWD)/gz
@@ -120,3 +124,18 @@ $(GZ)/$(MPFR_GZ):
 
 $(GZ)/$(MPC_GZ):
 	wget -c -O $@ https://ftp.gnu.org/gnu/mpc/$(MPC_GZ) && touch $@
+
+NEWLIB_CFG = --target=$(TARGET) --prefix=$(CWD)
+
+newlib: $(SRC)/$(NEWLIB)/README
+	rm -rf $(TMP)/$(NEWLIB) ; mkdir $(TMP)/$(NEWLIB) ; cd $(TMP)/$(NEWLIB) ;\
+		PATH=$(CWD)/bin:$(PATH) CC=$(HW)-gcc $(SRC)/$(NEWLIB)/$(CFG) $(NEWLIB_CFG)
+		# CC=$(HW)-gcc 
+
+#		 && $(MAKEJ) && $(MAKE) install-strip &&\
+
+$(SRC)/$(NEWLIB)/README: $(GZ)/$(NEWLIB_GZ)
+	cd $(SRC) ; tar zx < $< ; mv newlib-$(NEWLIB) $(NEWLIB) ; touch $@
+
+$(GZ)/$(NEWLIB_GZ):
+	wget -c -O $@ https://github.com/bminor/newlib/archive/newlib-3.1.0.tar.gz
