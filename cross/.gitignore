@@ -1,3 +1,5 @@
 tmp/
 bin/
 share/
+lib/
+include/

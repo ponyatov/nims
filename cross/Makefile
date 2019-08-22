@@ -29,6 +29,7 @@ CWD = $(CURDIR)
 GZ  = $(CWD)/gz
 TMP = $(CWD)/tmp
 SRC = $(TMP)/src
+SSR = $(CWD)/sysroot
 
 build: gcc
 
@@ -36,7 +37,7 @@ clean:
 	rm -rf $(CWD)/bin $(CWD)/lib $(CWD)/share $(CWD)/include
 
 dirs:
-	mkdir -p $(GZ) $(TMP) $(SRC)
+	mkdir -p $(GZ) $(TMP) $(SRC) $(SSR)
 
 CFG = configure --disable-nls --prefix=$(CWD)
 
@@ -44,25 +45,27 @@ MAKEJ = $(MAKE) -j$(shell grep proc /proc/cpuinfo|wc -l)
 
 CCLIBS_PFX = --with-gmp=$(CWD) --with-mpfr=$(CWD) --with-mpc=$(CWD)
 
-binutils: bin/$(TARGET)-ld
+binutils: bin/$(HW)-ld
 
-BINUTILS_CFG = $(CCLIBS_PFX) --program-prefix=$(HW)- --target=$(TARGET)
+BINUTILS_CFG = $(CCLIBS_PFX) --program-prefix=$(HW)- --target=$(TARGET) --with-sysroot=$(SSR)
 
-bin/$(TARGET)-ld: $(GZ)/$(BINUTILS_GZ)
+bin/$(HW)-ld: $(GZ)/$(BINUTILS_GZ)
 	$(MAKE) $(SRC)/$(BINUTILS)/README 
 	rm -rf $(TMP)/$(BINUTILS) ; mkdir $(TMP)/$(BINUTILS) ; cd $(TMP)/$(BINUTILS) ;\
 		$(SRC)/$(BINUTILS)/$(CFG) $(BINUTILS_CFG) && $(MAKEJ) && $(MAKE) install-strip &&\
 		rm -rf $(SRC)/$(BINUTILS) $(TMP)/$(BINUTILS)
 
-gcc: bin/$(TARGET)-gcc
+gcc: bin/$(HW)-gcc
 
 GCC_CFG = $(BINUTILS_CFG) --enable-languages="c"
 
-bin/$(TARGET)-gcc: gmp mpfr mpc binutils $(GZ)/$(GCC_GZ)
+bin/$(HW)-gcc: cclibs binutils $(GZ)/$(GCC_GZ)
 	$(MAKE) $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
 		$(SRC)/$(GCC)/$(CFG) $(GCC_CFG) && $(MAKE) -j2 && $(MAKE) install-strip &&\
 		rm -rf $(SRC)/$(GCC) $(TMP)/$(GCC)
+
+cclibs: gmp mpfr mpc
 
 CCLIBS_CFG = $(CCLIBS_PFX) --disable-shared 
 
@@ -102,16 +105,16 @@ $(SRC)/%/README: $(GZ)/%.tar.gz
 	cd $(SRC) ;  zcat $< | tar x && touch $@
 
 $(GZ)/$(BINUTILS_GZ):
-	wget -c -O $@ https://mirror.tochlab.net/pub/gnu/binutils/binutils-2.32.tar.xz
+	wget -c -O $@ https://mirror.tochlab.net/pub/gnu/binutils/binutils-2.32.tar.xz && touch $@
 
 $(GZ)/$(GCC_GZ): $(GZ)/$(GMP_GZ) $(GZ)/$(MPFR_GZ)
-	wget -c -O $@ http://mirror.linux-ia64.org/gnu/gcc/releases/$(GCC)/$(GCC_GZ)
+	wget -c -O $@ http://mirror.linux-ia64.org/gnu/gcc/releases/$(GCC)/$(GCC_GZ) && touch $@
 
 $(GZ)/$(GMP_GZ):
-	wget -c -O $@ https://gmplib.org/download/gmp/$(GMP_GZ)
+	wget -c -O $@ https://gmplib.org/download/gmp/$(GMP_GZ) && touch $@
 
 $(GZ)/$(MPFR_GZ):
-	wget -c -O $@ https://www.mpfr.org/mpfr-current/$(MPFR_GZ)
+	wget -c -O $@ https://www.mpfr.org/mpfr-current/$(MPFR_GZ) && touch $@
 
 $(GZ)/$(MPC_GZ):
-	wget -c -O $@ https://ftp.gnu.org/gnu/mpc/$(MPC_GZ)
+	wget -c -O $@ https://ftp.gnu.org/gnu/mpc/$(MPC_GZ) && touch $@
