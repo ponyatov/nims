@@ -1,0 +1,5 @@
+{
+    "files.exclude": {
+        "cross/tmp/src/*": true
+    }
+}

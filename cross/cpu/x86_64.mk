@@ -1,2 +1,2 @@
-ARCH = i386
+ARCH = amd64
 TARGET = $(CPU)-elf
