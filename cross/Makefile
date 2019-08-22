@@ -1,3 +1,7 @@
+HW ?= x86
+include hw/$(HW).mk
+include cpu/$(CPU).mk
+include arch/$(ARCH).mk
 
 GCC_VER = 9.2.0
 
