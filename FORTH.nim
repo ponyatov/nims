@@ -60,3 +60,20 @@ var                             ## data stack
     Dp:byte = 0
 
 for i in 0..Cp: echo i,'\t',M[i],'\t',ord(M[i])
+
+import system
+
+proc NOP = stdout.write "nop"
+
+proc BYE = stdout.write "bye\n" ; system.quit 0
+
+proc BCX =                      ## ByteCode eXecutor
+    while true:
+        assert(Ip < Msz)
+        var op = M[Ip] ; Ip += 1    # fetch command
+        stdout.write "\n",Ip-1,":\t",op,'\t'
+        case op
+        of ord(nop): NOP()
+        of ord(bye): BYE()
+        else: echo "unknown command" ; quit(-1)
+BCX()

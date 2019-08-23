@@ -25,11 +25,11 @@ PORT ?= 12345
 #  IP_FORWARDING = localhost
 
 debug: hello.mips
-	$(GDB) -ex "target extended-remote $(IP_FORWARDING):$(PORT)" \
-		-ex "set sysroot $(STAGING)" \
-		-ex "remote put $< /tmp/$<" \
-		-ex "set remote exec-file /tmp/$<" \
-		-ex "run" $<
+	$(GDB)	-ex "target extended-remote $(IP_FORWARDING):$(PORT)" \
+			-ex "set sysroot $(STAGING)" \
+			-ex "remote put $< /tmp/$<" \
+			-ex "set remote exec-file /tmp/$<" \
+			-ex "run" $<
 remote:
 	ssh root@$(IP) $(GDB_FORWARDING) 'gdbserver --multi $(IP_FORWARDING):$(PORT)'
 
