@@ -10,7 +10,8 @@ echo "\nMsz:",Msz,"  Rsz:",Rsz,"  Dsz:",Dsz
 
 type
       byte    = uint8
-      cell    = uint16          # \ 64K limited
+      cell    = int16           # \ 64K limited
+      ucell   = uint16
 const cellsz  = sizeof(cell)    # / for tiny MCUs
 
 type
@@ -37,19 +38,25 @@ type
 
 # var M[Msz]:bytes
 var                             ## program/data memory
-    M : array[0..Msz-1,opcode]  # bytecode area
+    M : array[0..Msz,byte]      # bytecode area
     Ip:cell = 0                 # instruction pointer
     Cp:cell = 0                 # compiler pointer
 
 const prog = [nop,bye]          # initial program
-assert(sizeof(prog) < Msz)
-for i in prog: M[Cp] = i ; Cp += 1
+
+proc compile(cmd: opcode) =
+    M[Cp] = ord(cmd) ; Cp += 1
+
+assert(sizeof(prog) < sizeof(M))
+for i in prog: compile(i)
 echo " Cp:",Cp
 
-var                     ## return stack
+var                             ## return stack
+    R : array[0..Rsz,ucell]      
     Rp:cell = 0
 
-var                     ## data stack
+var                             ## data stack
+    D : array[0..Dsz,cell]
     Dp:byte = 0
 
-
+for i in 0..Cp: echo i,'\t',M[i],'\t',ord(M[i])
