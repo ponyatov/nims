@@ -30,7 +30,7 @@ NEWLIB		= newlib-$(NEWLIB_VER)
 NEWLIB_GZ	= $(NEWLIB).tar.gz
 
 CWD = $(CURDIR)
-GZ  = $(CWD)/gz
+GZ  = $(HOME)/gz
 TMP = $(CWD)/tmp
 SRC = $(TMP)/src
 SSR = $(CWD)/sysroot
