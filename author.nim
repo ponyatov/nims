@@ -1,0 +1,1 @@
+const AUTHOR* = "(c) Dmitry Ponyatov <dponyatov@gmail.com>"

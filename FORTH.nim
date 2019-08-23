@@ -1,5 +1,6 @@
+import author
 echo "\niot/FORTH implementation in Nim language"
-echo "(c) Dmitry Ponyatov <dponyatov@gmail.com>"
+echo AUTHOR
 
 const                   # configuration
     Msz = 0x1000        # main memory, bytes

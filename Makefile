@@ -39,4 +39,4 @@ hello.mips: hello.c Makefile
 	# scp $@ root@$(IP):/$@
 
 hello: hello.nim Makefile
-	nim c $< && ls -la $@ && $(OD) -x $@
+	PATH=$(XPATH) nim c --cc=gcc --gcc.exe=$(TARGET)-gcc $< && ls -la $@ && $(OD) -x $@
