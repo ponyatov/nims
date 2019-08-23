@@ -7,7 +7,7 @@ import tables
 type Frame = object
     typ: string
     val: string
-    slot: Table[string,Frame]
-    nest: seq[Frame]
+    slot: Table[string,ptr Frame]
+    nest: seq[ptr Frame]
 
 echo Frame()
