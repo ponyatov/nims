@@ -114,7 +114,7 @@ $(GZ)/$(BINUTILS_GZ):
 	wget -c -O $@ https://mirror.tochlab.net/pub/gnu/binutils/binutils-2.32.tar.xz && touch $@
 
 $(GZ)/$(GCC_GZ): $(GZ)/$(GMP_GZ) $(GZ)/$(MPFR_GZ)
-	wget -c -O $@ http://mirror.linux-ia64.org/gnu/gcc/releases/$(GCC)/$(GCC_GZ) && touch $@
+	wget -c -O $@ ftp://ftp.nluug.nl/mirror/languages/gcc/releases/$(GCC)/$(GCC_GZ) && touch $@
 
 $(GZ)/$(GMP_GZ):
 	wget -c -O $@ https://gmplib.org/download/gmp/$(GMP_GZ) && touch $@
