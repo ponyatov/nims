@@ -35,10 +35,10 @@ TMP = $(CWD)/tmp
 SRC = $(TMP)/src
 SSR = $(CWD)/sysroot
 
-build: gcc
+build: dirs gcc
 
 clean:
-	rm -rf $(CWD)/bin $(CWD)/lib $(CWD)/share $(CWD)/include
+	rm -rf $(CWD)/bin $(CWD)/lib $(CWD)/share $(CWD)/include $(TMP) $(SSR) $(CWD)/$(TARGET)
 
 dirs:
 	mkdir -p $(GZ) $(TMP) $(SRC) $(SSR)
