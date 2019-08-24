@@ -59,11 +59,11 @@ bin/$(HW)-ld: $(GZ)/$(BINUTILS_GZ)
 		$(SRC)/$(BINUTILS)/$(CFG) $(BINUTILS_CFG) && $(MAKEJ) && $(MAKE) install-strip &&\
 		rm -rf $(SRC)/$(BINUTILS) $(TMP)/$(BINUTILS)
 
-gcc: bin/$(HW)-gcc
+gcc: cclibs binutils bin/$(HW)-gcc
 
 GCC_CFG = $(BINUTILS_CFG) --without-headers --with-newlib --enable-languages="c"
 
-bin/$(HW)-gcc: cclibs binutils $(GZ)/$(GCC_GZ)
+bin/$(HW)-gcc: $(GZ)/$(GCC_GZ)
 	$(MAKE) $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
 		$(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
