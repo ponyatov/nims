@@ -65,7 +65,7 @@ GCC_CFG = $(BINUTILS_CFG) --without-headers --with-newlib --enable-languages="c"
 
 bin/$(HW)-gcc: cclibs binutils $(GZ)/$(GCC_GZ)
 	$(MAKE) $(SRC)/$(GCC)/README
-	cd $(TMP)/$(GCC) ;\
+	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
 		$(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
 			$(MAKE) -j2 all-gcc all-target-libgcc &&\
 			$(MAKE) install-gcc install-target-libgcc &&\
