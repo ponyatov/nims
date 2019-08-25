@@ -10,3 +10,9 @@ var
     codePos = 0
     tapePos = 0
     
+
+proc run(skip = false): bool =
+    echo "codePos: ", codePos, " tapePos: ", tapePos
+
+discard run()
+      
