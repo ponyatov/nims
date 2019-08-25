@@ -1,5 +1,12 @@
-# This is just an example to get you started. A typical binary package
-# uses this file as the main entry point of the application.
+import os
 
-when isMainModule:
-  echo("Hello, World!")
+let code = if paramCount() > 0: readFile paramStr(1)
+           else: "<><><<><>" # readAll stdin
+
+echo code
+
+var
+    tape = newSeq[char]()
+    codePos = 0
+    tapePos = 0
+    
