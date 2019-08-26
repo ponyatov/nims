@@ -1,3 +1,5 @@
+all:
+
 merge:
 	git checkout master
-	git checkout ponyatov -- Makefile .gitignore cross bare
+	git checkout ponyatov -- Makefile .gitignore cross bare mips
