@@ -49,21 +49,21 @@ MAKEJ = $(MAKE) -j$(shell grep proc /proc/cpuinfo|wc -l)
 
 CCLIBS_PFX = --with-gmp=$(CWD) --with-mpfr=$(CWD) --with-mpc=$(CWD)
 
-binutils: bin/$(HW)-ld
+binutils: bin/$(TARGET)-ld
 
-BINUTILS_CFG = $(CCLIBS_PFX) --program-prefix=$(HW)- --target=$(TARGET) --with-sysroot=$(SSR)
+BINUTILS_CFG = $(CCLIBS_PFX) --target=$(TARGET) --with-sysroot=$(SSR)
 
-bin/$(HW)-ld: $(GZ)/$(BINUTILS_GZ)
+bin/$(TARGET)-ld: $(GZ)/$(BINUTILS_GZ)
 	$(MAKE) $(SRC)/$(BINUTILS)/README 
 	rm -rf $(TMP)/$(BINUTILS) ; mkdir $(TMP)/$(BINUTILS) ; cd $(TMP)/$(BINUTILS) ;\
 		$(SRC)/$(BINUTILS)/$(CFG) $(BINUTILS_CFG) && $(MAKEJ) && $(MAKE) install-strip &&\
 		rm -rf $(SRC)/$(BINUTILS) $(TMP)/$(BINUTILS)
 
-gcc: cclibs binutils bin/$(HW)-gcc
+gcc: cclibs binutils bin/$(TARGET)-gcc
 
 GCC_CFG = $(BINUTILS_CFG) --without-headers --with-newlib --enable-languages="c"
 
-bin/$(HW)-gcc: $(GZ)/$(GCC_GZ)
+bin/$(TARGET)-gcc: $(GZ)/$(GCC_GZ)
 	$(MAKE) $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
 		$(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
@@ -127,10 +127,9 @@ $(GZ)/$(MPC_GZ):
 
 NEWLIB_CFG = --target=$(TARGET) --prefix=$(CWD)
 
-newlib: $(SRC)/$(NEWLIB)/README
+libc: $(SRC)/$(NEWLIB)/README
 	rm -rf $(TMP)/$(NEWLIB) ; mkdir $(TMP)/$(NEWLIB) ; cd $(TMP)/$(NEWLIB) ;\
-		PATH=$(CWD)/bin:$(PATH) CC=$(HW)-gcc $(SRC)/$(NEWLIB)/$(CFG) $(NEWLIB_CFG)
-		# CC=$(HW)-gcc 
+		PATH=$(CWD)/bin:$(PATH) $(SRC)/$(NEWLIB)/$(CFG) $(NEWLIB_CFG)
 
 #		 && $(MAKEJ) && $(MAKE) install-strip &&\
 
