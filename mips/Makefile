@@ -21,7 +21,7 @@ PORT ?= 12345
 # GDB_FORWARDING = -L $(PORT):$(IP):$(PORT)
 #  IP_FORWARDING = localhost
 
-debug: hello_c
+debug: hello_nim
 	$(XPATH) $(GDB)	-ex "target extended-remote $(IP_FORWARDING):$(PORT)" \
 					-ex "set sysroot $(STAGING)" \
 					-ex "remote put $< /tmp/$<" \
@@ -31,11 +31,11 @@ remote:
 	ssh root@$(IP) $(GDB_FORWARDING) 'gdbserver --multi $(IP_FORWARDING):$(PORT)'
 
 hello_c: hello.c Makefile
-	$(XPATH) $(CC) -o $@ $< && echo
+	$(XPATH) $(CC) -o $@ $<
 	file $@ ; ls -la $@
 	$(XPATH) $(SZ) $@
 
-hello_nil: hello.nim Makefile
-	$(XPATH) nim c $<
+hello_nim: hello.nim hello.nim.cfg Makefile
+	$(XPATH) nim c -o:$@ $<
 	file $@ ; ls -la $@
-	$(XPATH) $(OD) -x $@
+	$(XPATH) $(SZ) -x $@
