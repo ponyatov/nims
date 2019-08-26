@@ -1,0 +1,1 @@
+CPU = $(shell uname -m)

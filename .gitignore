@@ -1,6 +1,11 @@
 *~
 *.swp
+*.log
 nimcache/
 hello
 tempCodeRunnerFile
 FORTH
+hello.mips
+metaL
+habr
+wiki/
