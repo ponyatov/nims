@@ -70,9 +70,16 @@ bin/$(TARGET)-gcc: $(GZ)/$(GCC_GZ)
 		$(XPATH) $(SRC)/$(GCC)/$(CFG) $(GCC0_CFG) &&\
 			$(MAKE) -j2 all-gcc all-target-libgcc &&\
 			$(MAKE) install-gcc install-target-libgcc &&\
-	rm -rf $(SRC)/$(GCC) $(TMP)/$(GCC)
+	rm -rf $(TMP)/$(GCC)
 
-gcc: $(SSR)/include/stdlib.h
+GCC_CFG = $(BINUTILS_CFG) --enable-languages="c"
+
+gcc: libc $(GZ)/$(GCC_GZ)
+	$(MAKE) $(SRC)/$(GCC)/README
+	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
+		$(XPATH) $(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
+			$(MAKE) -j2 all-gcc all-target-libgcc &&\
+			$(MAKE) install-gcc install-target-libgcc
 
 cclibs: gmp mpfr mpc
 
@@ -131,10 +138,12 @@ $(GZ)/$(MPC_GZ):
 NEWLIB_CFG = --target=$(TARGET) --prefix=$(SSR)
 
 libc: $(SSR)/$(TARGET)/include/stdlib.h
-$(SSR)/$(TARGET)/include/stdlib.h: $(SRC)/$(NEWLIB)/README
+$(SSR)/$(TARGET)/include/stdlib.h: $(GZ)/$(NEWLIB_GZ)
+	$(MAKE) $(SRC)/$(NEWLIB)/README
 	rm -rf $(TMP)/$(NEWLIB) ; mkdir $(TMP)/$(NEWLIB) ; cd $(TMP)/$(NEWLIB) ;\
 		$(XPATH) $(SRC)/$(NEWLIB)/$(CFG) $(NEWLIB_CFG) &&\
-			$(MAKEJ) && $(MAKE) install
+			$(MAKEJ) && $(MAKE) install &&\
+	rm -rf $(SRC)/$(NEWLIB) $(TMP)/$(NEWLIB)
 
 $(SRC)/$(NEWLIB)/README: $(GZ)/$(NEWLIB_GZ)
 	cd $(SRC) ; tar zx < $< ; mv newlib-$(NEWLIB) $(NEWLIB) ; touch $@
