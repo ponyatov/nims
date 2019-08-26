@@ -31,7 +31,7 @@ remote:
 	ssh root@$(IP) $(GDB_FORWARDING) 'gdbserver --multi $(IP_FORWARDING):$(PORT)'
 
 hello_c: hello.c Makefile
-	$(XPATH) $(CC) -o $@ $< && echo
+	$(XPATH) $(CC) -o $@ $<
 	file $@ ; ls -la $@
 	$(XPATH) $(SZ) $@
 
