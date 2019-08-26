@@ -72,14 +72,17 @@ bin/$(TARGET)-gcc: $(GZ)/$(GCC_GZ)
 			$(MAKE) install-gcc install-target-libgcc &&\
 	rm -rf $(TMP)/$(GCC)
 
-GCC_CFG = $(BINUTILS_CFG) --enable-languages="c"
+GCC_CFG = $(BINUTILS_CFG) --without-headers --enable-languages="c"
 
 gcc: libc $(GZ)/$(GCC_GZ)
-	$(MAKE) $(SRC)/$(GCC)/README
-	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
-		$(XPATH) $(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
-			$(MAKE) -j2 all-gcc all-target-libgcc &&\
-			$(MAKE) install-gcc install-target-libgcc
+	cd $(TMP)/$(GCC) ;\
+	 	$(XPATH) $(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
+			$(MAKE) -j2 all-gcc
+	# $(MAKE) $(SRC)/$(GCC)/README
+	# rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
+	# 	$(XPATH) $(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
+	# 		$(MAKE) -j2 all-gcc all-target-libgcc &&\
+	# 		$(MAKE) install-gcc install-target-libgcc
 
 cclibs: gmp mpfr mpc
 
