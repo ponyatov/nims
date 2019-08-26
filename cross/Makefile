@@ -35,7 +35,7 @@ TMP = $(CWD)/tmp
 SRC = $(TMP)/src
 SSR = $(CWD)/sysroot
 
-build: dirs gcc
+build: dirs gcc0 libc gcc
 
 clean:
 	rm -rf $(CWD)/bin $(CWD)/lib $(CWD)/share $(CWD)/include $(TMP) $(SSR) $(CWD)/$(TARGET)
@@ -43,8 +43,9 @@ clean:
 dirs:
 	mkdir -p $(GZ) $(TMP) $(SRC) $(SSR)
 
-CFG = configure --disable-nls --prefix=$(CWD)
-
+XPATH = PATH=$(CWD)/bin:$(PATH)
+CFG   = configure --disable-nls --prefix=$(CWD)
+MAKE := $(XPATH) $(MAKE)
 MAKEJ = $(MAKE) -j$(shell grep proc /proc/cpuinfo|wc -l)
 
 CCLIBS_PFX = --with-gmp=$(CWD) --with-mpfr=$(CWD) --with-mpc=$(CWD)
@@ -59,17 +60,19 @@ bin/$(TARGET)-ld: $(GZ)/$(BINUTILS_GZ)
 		$(SRC)/$(BINUTILS)/$(CFG) $(BINUTILS_CFG) && $(MAKEJ) && $(MAKE) install-strip &&\
 		rm -rf $(SRC)/$(BINUTILS) $(TMP)/$(BINUTILS)
 
-gcc: cclibs binutils bin/$(TARGET)-gcc
+gcc0: cclibs binutils bin/$(TARGET)-gcc
 
-GCC_CFG = $(BINUTILS_CFG) --without-headers --with-newlib --enable-languages="c"
+GCC0_CFG = $(BINUTILS_CFG) --without-headers --with-newlib --enable-languages="c"
 
 bin/$(TARGET)-gcc: $(GZ)/$(GCC_GZ)
 	$(MAKE) $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ; cd $(TMP)/$(GCC) ;\
-		$(SRC)/$(GCC)/$(CFG) $(GCC_CFG) &&\
+		$(XPATH) $(SRC)/$(GCC)/$(CFG) $(GCC0_CFG) &&\
 			$(MAKE) -j2 all-gcc all-target-libgcc &&\
 			$(MAKE) install-gcc install-target-libgcc &&\
 	rm -rf $(SRC)/$(GCC) $(TMP)/$(GCC)
+
+gcc: $(SSR)/include/stdlib.h
 
 cclibs: gmp mpfr mpc
 
@@ -125,13 +128,13 @@ $(GZ)/$(MPFR_GZ):
 $(GZ)/$(MPC_GZ):
 	wget -c -O $@ https://ftp.gnu.org/gnu/mpc/$(MPC_GZ) && touch $@
 
-NEWLIB_CFG = --target=$(TARGET) --prefix=$(CWD)
+NEWLIB_CFG = --target=$(TARGET) --prefix=$(SSR)
 
-libc: $(SRC)/$(NEWLIB)/README
+libc: $(SSR)/$(TARGET)/include/stdlib.h
+$(SSR)/$(TARGET)/include/stdlib.h: $(SRC)/$(NEWLIB)/README
 	rm -rf $(TMP)/$(NEWLIB) ; mkdir $(TMP)/$(NEWLIB) ; cd $(TMP)/$(NEWLIB) ;\
-		PATH=$(CWD)/bin:$(PATH) $(SRC)/$(NEWLIB)/$(CFG) $(NEWLIB_CFG)
-
-#		 && $(MAKEJ) && $(MAKE) install-strip &&\
+		$(XPATH) $(SRC)/$(NEWLIB)/$(CFG) $(NEWLIB_CFG) &&\
+			$(MAKEJ) && $(MAKE) install
 
 $(SRC)/$(NEWLIB)/README: $(GZ)/$(NEWLIB_GZ)
 	cd $(SRC) ; tar zx < $< ; mv newlib-$(NEWLIB) $(NEWLIB) ; touch $@
