@@ -3,6 +3,6 @@
 
 #include <gtk/gtk.h>
 
-void gui_init() {
+extern void gui_init() {
     gtk_init(&argc, &argv);
 }
