@@ -13,4 +13,3 @@ backend       = "js"
 # Dependencies
 
 requires "nim >= 0.20.2"
-requires "nimx >= 0.1"
