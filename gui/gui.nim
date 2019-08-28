@@ -3,3 +3,5 @@
 
 {.compile: "gui.c".}
 proc gui_init*() {.importc.}
+
+gui_init()

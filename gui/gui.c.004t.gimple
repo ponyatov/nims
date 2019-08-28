@@ -1,0 +1,33 @@
+main (int argc, char * * argv)
+{
+  struct GtkWidget * D.52093;
+  struct GtkWidget * window.0;
+  struct GTypeInstance * D.52095;
+  long unsigned int D.52096;
+  struct GtkWidget * window.1;
+  struct GTypeInstance * D.52098;
+  struct GtkWidget * window.2;
+  int D.52100;
+
+  {
+    gtk_init (&argc, &argv);
+    D.52093 = gtk_window_new (0);
+    window = D.52093;
+    window.0 = window;
+    D.52095 = g_type_check_instance_cast (window.0, 80);
+    g_signal_connect_data (D.52095, "destroy", gtk_main_quit, 0B, 0B, 0);
+    D.52096 = gtk_window_get_type ();
+    window.1 = window;
+    D.52098 = g_type_check_instance_cast (window.1, D.52096);
+    gtk_window_set_title (D.52098, "Введение в GTK");
+    window.2 = window;
+    gtk_widget_show_all (window.2);
+    gtk_main ();
+    D.52100 = 0;
+    return D.52100;
+  }
+  D.52100 = 0;
+  return D.52100;
+}
+
+
