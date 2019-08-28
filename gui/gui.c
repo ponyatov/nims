@@ -5,12 +5,13 @@
 
 GtkWidget *window;
 
+#ifdef NIM
+extern void gui_init() {
+    gtk_init(0,NULL);
+#else
 int main(int argc, char *argv[]) {
-
     gtk_init (&argc, &argv);
-
-// //extern void gui_init() {
-//     gtk_init(0,NULL);//&argc, &argv);
+#endif // NIM
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -21,5 +22,7 @@ int main(int argc, char *argv[]) {
 
     gtk_main();
 
+#ifndef NIM
     return 0;
+#endif
 }
