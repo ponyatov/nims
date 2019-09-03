@@ -12,7 +12,9 @@ var
 
 proc step(skip = false) =
     case code[codePos]
-    of '>': inc tapePos
+    of '>':
+        inc tapePos
+        if tapePos >= tape.len: tape.add '\0'
     of '<': dec tapePos
     of '+': inc tape[tapePos]
     of '-': dec tape[tapePos]
@@ -27,8 +29,5 @@ proc run(skip = false): bool =
     while codePos < code.len:
         step() ; state()
     true
-
-import gui
-gui_init()
 
 discard run()
