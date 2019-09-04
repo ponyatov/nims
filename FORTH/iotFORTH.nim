@@ -14,6 +14,11 @@ const                               ## memory sizes
     Rsz = 1 shl 0x8                 # return stack size, cells
     Dsz = 1 shl 0x4                 # data stack size, cells
 
+type                                ## limited pointer types
+    Mptr = range[0..Msz-1]
+    Rptr = range[0..Rsz-1]
+    Dptr = range[0..Dsz-1]
+    
 const
     Mmsk = Msz-1
     Rmsk = Rsz-1
