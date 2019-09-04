@@ -25,14 +25,17 @@ const
     Dmsk = Dsz-1
     cellsz = sizeof(ucell)
 
-echo "\nMsz:",Msz,"  Rsz:",Rsz,"  Dsz:",Dsz,  "\n"
+import os,strutils
 
-import strutils
+proc log(args:varargs[string,`$`]) = stdout.write(args)
 
-echo "Mmsk:",Mmsk.toBin(cellsz shl 3)
-echo "Rmsk:",Rmsk.toBin(cellsz shl 3)
-echo "Dmsk:",Dmsk.toBin(cellsz shl 3)
-echo ' '
+log getAppFilename()
+
+log "\nMsz:",Msz,"  Rsz:",Rsz,"  Dsz:",Dsz,  "\n"
+
+log "\nMmsk:",Mmsk.toBin(cellsz shl 3)
+log "\tRmsk:",Rmsk.toBin(cellsz shl 3)
+log "\tDmsk:",Dmsk.toBin(cellsz shl 3)
 
 type                                # bytecode commands
     op = enum # opcode
@@ -68,7 +71,7 @@ var                                 # return stack
     R : array[Rsz,cell  ]
     Rp = ucell(0)
 
-echo "init:",init
+log "\ninit:",init
 
 proc store(a:ucell,b:byte) =
     M[a] = b
@@ -95,10 +98,13 @@ store(entry,Cp)                     # run init[] program from here
 for i in 0..init.len-1:
     discard compile(init[i])
 
-echo "M:",M[0..Cp-1] ; echo "Cp:",Cp ; echo "Ip:",Ip
+log "\nM:",M[0..Cp-1] , "\nCp:",Cp , "\tIp:",Ip, '\n'
 
 proc DROP() = assert(Dp > byte(0)) ; Dp -= byte(1)
 
 proc VM() =
-    discard
+    while true:
+        var bc = M[Ip] ; inc Ip
+        log '\n',int(Ip).toHex(4),'\t',$op(bc)
+        break
 VM()
