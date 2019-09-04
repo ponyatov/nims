@@ -15,9 +15,9 @@ const                               ## memory sizes
     Dsz = 1 shl 0x4                 # data stack size, cells
 
 type                                ## limited pointer types
-    Mptr = range[0..Msz-1]
-    Rptr = range[0..Rsz-1]
-    Dptr = range[0..Dsz-1]
+    mp = ucell # range[0..Msz-1]
+    rp = ucell # range[0..Rsz-1]
+    dp =  byte # range[0..Dsz-1]
     
 import os,strutils
 
@@ -50,39 +50,42 @@ type                                # bytecode commands
 
 var                                 ## program/data memory
     M : array[Msz,byte  ]           # bytecode area
-    Cp = ucell(0)                   # instruction pointer
-    Ip = ucell(0)                   # compiler pointer
+    Cp = mp(0)                      # instruction pointer
+    Ip = mp(0)                      # compiler pointer
 const init =                        # initial program
     [nop,bye]
 var                                 # data stack
-    D : array[Dsz,int16 ]
-    Dp = byte(0)
+    D : array[Dsz,cell  ]
+    Dp = dp(0)
 var                                 # return stack
-    R : array[Rsz,cell  ]
-    Rp = ucell(0)
+    R : array[Rsz,mp    ]
+    Rp = rp(0)
 
 log "\ninit:",init
 
-proc store(a:ucell,b:byte) =
+proc store(a:mp,b:byte) =
+    assert( a < Msz-sizeof(b) )
     M[a] = b
-proc store(a:ucell,b:ucell) =
+proc store(a:mp,b:mp) =
+    assert( a < Msz-sizeof(a) )
+    assert( b < Msz-sizeof(b) )
     M[a+0] = byte(b shr 0)
     M[a+1] = byte(b shr 8)
 
-proc compile(b:byte):ucell =
+proc compile(b:byte):mp =
     let Csave = Cp
-    store(Cp,b) ; Cp += ucell(sizeof(b))
+    store(Cp,b) ; inc Cp
     return Csave
-proc compile(c:ucell):ucell =
+proc compile(a:mp):mp =
     let Csave = Cp
-    store(Cp,c) ; Cp += ucell(sizeof(c))
+    store(Cp,a) ; Cp += mp(sizeof(a))
     return Csave
-proc compile(bc:op):ucell = compile(byte(bc))
+proc compile(bc:op):mp = compile(byte(bc))
     
                                     ## compile bytecode header
 discard     compile(byte(op.jmp))   # zero jmp
-let entry = compile(ucell(0))       # to program entry point
-let lfa   = compile(ucell(0))       # last defined word LFA
+let entry = compile(mp(0))          # to program entry point
+let lfa   = compile(mp(0))          # last defined word LFA
 
 store(entry,Cp)                     # run init[] program from here
 for i in 0..init.len-1:
@@ -90,7 +93,7 @@ for i in 0..init.len-1:
 
 log "\nM:",M[0..Cp-1] , "\nCp:",Cp , "\tIp:",Ip, '\n'
 
-proc DROP() = assert(Dp > byte(0)) ; Dp -= byte(1)
+proc DROP() = assert(Dp > byte(0)) ; dec Dp
 
 proc VM() =
     while true:
