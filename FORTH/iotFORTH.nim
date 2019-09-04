@@ -19,7 +19,9 @@ type                                    ## limited pointer types
     rp = ucell # range[0..Rsz-1]
     dp =  byte # range[0..Dsz-1]
                                         # wrapped operators
-proc `+`(a:mp,b:int):mp = result = a + mp(b) ; assert result < high(mp)
+proc `+`(a:mp,b:int):mp =
+    result = a + mp(b)
+    assert result < high(mp)
     
 import os,strutils
 
@@ -51,28 +53,28 @@ type                                # bytecode commands
         bye     = (0xFF,"bye")
 
 var                                 ## program/data memory
-    M : array[mp,byte  ]            # bytecode area
+    M : array[mp,byte]              # bytecode area
     Cp = mp(0)                      # instruction pointer
     Ip = mp(0)                      # compiler pointer
 const init =                        # initial program
     [nop,bye]
 var                                 # data stack
-    D : array[Dsz,cell  ]
+    D : array[Dsz,cell]
     Dp = dp(0)
 var                                 # return stack
-    R : array[Rsz,mp    ]
+    R : array[Rsz,mp]
     Rp = rp(0)
 
 log "\ninit:",init
-
-# proc `[]=`(m:typeof(M),a:int,b:byte) = discard
-
+                                    # store to M[]
 proc store(a:mp,b:byte) =
     M[a] = b
-proc store(a:mp,b:mp)   =
-    M[a+0] = byte(b shr 0)
-    M[a+1] = byte(b shr 8)
-
+proc store(a:mp,b:ucell) =
+    M[a+0] = cast[byte](b shr 0)
+    M[a+1] = cast[byte](b shr 8)
+proc store(a:mp,b:mp) =
+    store(a,ucell(b))
+                                    # compile to end of used M[]
 proc compile(b:byte):mp =
     let Csave = Cp
     store(Cp,b) ; inc Cp
@@ -94,11 +96,19 @@ for i in 0..init.len-1:
 
 log "\nM:",M[0..uint16(Cp)-1] , "\nCp:",Cp , "\tIp:",Ip, '\n'
 
-proc DROP() = assert(Dp > byte(0)) ; dec Dp
+proc NOP() = discard
+proc BYE() = log '\n' ; quit(0)
+proc JMP() = Ip = M[Ip] ; log '\t',Ip.toHex
+
+proc DROP() = dec Dp
 
 proc VM() =
     while true:
         var bc = M[Ip] ; inc Ip
         log '\n',int(Ip).toHex(4),'\t',$op(bc)
-        break
+        case (bc):
+            of ord(nop): NOP()
+            of ord(bye): BYE()
+            of ord(jmp): JMP()
+            else: quit(-1)
 VM()
