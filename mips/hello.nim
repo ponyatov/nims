@@ -1,1 +1,1 @@
-echo "Hello World"
+echo "\n\nHello Openrt .nim\n\n"
