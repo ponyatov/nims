@@ -19,12 +19,6 @@ type                                ## limited pointer types
     Rptr = range[0..Rsz-1]
     Dptr = range[0..Dsz-1]
     
-const
-    Mmsk = Msz-1
-    Rmsk = Rsz-1
-    Dmsk = Dsz-1
-    cellsz = sizeof(ucell)
-
 import os,strutils
 
 proc log(args:varargs[string,`$`]) = stdout.write(args)
@@ -32,10 +26,6 @@ proc log(args:varargs[string,`$`]) = stdout.write(args)
 log getAppFilename()
 
 log "\nMsz:",Msz,"  Rsz:",Rsz,"  Dsz:",Dsz,  "\n"
-
-log "\nMmsk:",Mmsk.toBin(cellsz shl 3)
-log "\tRmsk:",Rmsk.toBin(cellsz shl 3)
-log "\tDmsk:",Dmsk.toBin(cellsz shl 3)
 
 type                                # bytecode commands
     op = enum # opcode
