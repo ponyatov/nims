@@ -13,3 +13,5 @@ bin           = @["windoze"]
 # Dependencies
 
 requires "nim >= 0.20.2"
+requires "winim"
+

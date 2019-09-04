@@ -4,20 +4,22 @@
 # https://forum.nim-lang.org/t/5164
 
 
-type                                ## IoT 16bit
-    cell  =  int16                  # \ 64K limited
-    ucell = uint16                  # / for tiny MCUs
+type                                    ## IoT 16bit
+    cell  =  int16                      # \ 64K limited
+    ucell = uint16                      # / for tiny MCUs
     byte  = uint8
 
-const                               ## memory sizes
-    Msz = 1 shl 0xC                 # main memory, bytes
-    Rsz = 1 shl 0x8                 # return stack size, cells
-    Dsz = 1 shl 0x4                 # data stack size, cells
+const                                   ## memory sizes
+    Msz = 1'u16 shl 0xC                 # main memory, bytes
+    Rsz = 1'u16 shl 0x8                 # return stack size, cells
+    Dsz = 1'u8  shl 0x4                 # data stack size, cells
 
-type                                ## limited pointer types
-    mp = ucell # range[0..Msz-1]
+type                                    ## limited pointer types
+    mp = range[0'u16..Msz-1]
     rp = ucell # range[0..Rsz-1]
     dp =  byte # range[0..Dsz-1]
+                                        # wrapped operators
+proc `+`(a:mp,b:int):mp = result = a + mp(b) ; assert result < high(mp)
     
 import os,strutils
 
@@ -49,7 +51,7 @@ type                                # bytecode commands
         bye     = (0xFF,"bye")
 
 var                                 ## program/data memory
-    M : array[Msz,byte  ]           # bytecode area
+    M : array[mp,byte  ]            # bytecode area
     Cp = mp(0)                      # instruction pointer
     Ip = mp(0)                      # compiler pointer
 const init =                        # initial program
@@ -63,12 +65,11 @@ var                                 # return stack
 
 log "\ninit:",init
 
+# proc `[]=`(m:typeof(M),a:int,b:byte) = discard
+
 proc store(a:mp,b:byte) =
-    assert( a < Msz-sizeof(b) )
     M[a] = b
-proc store(a:mp,b:mp) =
-    assert( a < Msz-sizeof(a) )
-    assert( b < Msz-sizeof(b) )
+proc store(a:mp,b:mp)   =
     M[a+0] = byte(b shr 0)
     M[a+1] = byte(b shr 8)
 
@@ -91,7 +92,7 @@ store(entry,Cp)                     # run init[] program from here
 for i in 0..init.len-1:
     discard compile(init[i])
 
-log "\nM:",M[0..Cp-1] , "\nCp:",Cp , "\tIp:",Ip, '\n'
+log "\nM:",M[0..uint16(Cp)-1] , "\nCp:",Cp , "\tIp:",Ip, '\n'
 
 proc DROP() = assert(Dp > byte(0)) ; dec Dp
 
