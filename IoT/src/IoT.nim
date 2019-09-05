@@ -13,19 +13,22 @@ let window = newWindow($ os.getAppFilename())
 
 window.iconPath = "IoT.png"
 
-let carr = newLayoutContainer(Layout_Vertical) ; window.add(carr)
+let inner = newLayoutContainer(Layout_Vertical) ; window.add(inner)
 
-let btn = newLayoutContainer(Layout_Horizontal) ; carr.add(btn)
+let btn = newLayoutContainer(Layout_Horizontal) ; inner.add(btn)
 
 let about = newButton("About") ; btn.add(about)
-about.onClick = proc(event: ClickEvent) = window.alert("IoT platform")
+about.onClick = proc(event: ClickEvent) = window.alert("platform","IoT")
 
-let ide = newLayoutContainer(Layout_Horizontal) ; carr.add(ide)
+let ide = newLayoutContainer(Layout_Horizontal) ; inner.add(ide)
 
 let ostab = newLayoutContainer(Layout_Vertical) ; ide.add(ostab)
 
+ostab.frame = newFrame("ostab Row 1: Auto-sized")
+
 let files = newTextArea() ; ostab.add(files)
 files.addLine "Files"
+# files.width = 111
 
 let shell = newTextArea() ; ostab.add(shell)
 shell.addLine "shell>"
@@ -38,6 +41,12 @@ words.addLine "Words"
 let stack = newTextArea() ; cli.add(stack) ; stack.addLine "<stack:>"
 let pad = newTextArea() ; cli.add(pad) ; pad.addLine "# command"
 let log = newTextArea() ; cli.add(log) ; log.addLine "log"
+
+window.onResize = proc(event: ResizeEvent) =
+  echo window.width
+  ostab.width = max(111, window.width div 5 )
+  words.width = max(111, window.width div 5 )
+  stack.height = window.height div 2
 
 window.show()
 app.run()

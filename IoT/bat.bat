@@ -1,5 +1,5 @@
 :ag
 nimble build
-pause
 .\IoT.exe
+pause
 goto ag
