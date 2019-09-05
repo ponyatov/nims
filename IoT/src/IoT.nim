@@ -3,5 +3,32 @@
 
 import IoTpkg/submodule
 
-when isMainModule:
-  echo(getWelcomeMessage())
+import nigui
+
+app.init()
+
+import os
+
+let window = newWindow($ os.getAppFilename())
+
+let ide = newLayoutContainer(Layout_Horizontal) ; window.add(ide)
+
+let ostab = newLayoutContainer(Layout_Vertical) ; ide.add(ostab)
+
+let files = newTextArea() ; ostab.add(files)
+files.addLine "Files"
+
+let shell = newTextArea() ; ostab.add(shell)
+shell.addLine "shell>"
+
+let cli = newLayoutContainer(Layout_Vertical) ; ide.add(cli)
+
+let words = newTextArea() ; ide.add(words)
+words.addLine "Words"
+
+let stack = newTextArea() ; cli.add(stack) ; stack.addLine "<stack:>"
+let pad = newTextArea() ; cli.add(pad) ; pad.addLine "# command"
+let log = newTextArea() ; cli.add(log) ; log.addLine "log"
+
+window.show()
+app.run()
