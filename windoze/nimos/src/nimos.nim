@@ -16,39 +16,43 @@ echo "Hello","world",1,3.4
 # https://github.com/khchen/winim
 # import winim/lean
 
-import wNim
+import anygui
 
-import ../res/res
+echo anygui.backend()
 
-let app = App()
-let frame = Frame(title= $exe & ' ' & $args)
-frame.icon = Icon("", 0)
+# import wNim
 
-let menuBar = MenuBar(frame)
+# import ../res/res
 
-type
-  MenuId = enum
-    idNew = 100, idLoad, idSave, idSaveAs, idExit,
-	idAbout
+# let app = App()
+# let frame = Frame(title= $exe & ' ' & $args)
+# frame.icon = Icon("", 0)
 
-let menuFile = Menu(menuBar, "&File")
-menuFile.append(idNew, "&New")
-menuFile.append(idLoad, "&Load")
-menuFile.append(idSave, "&Save\tCtrl+S")
-menuFile.append(idSaveAs, "S&ave As...")
-menuFile.appendSeparator()
-menuFile.append(idExit, "E&xit\tCtrl+Q", "Exit the program.")
+# let menuBar = MenuBar(frame)
 
-let menuHelp = Menu(menuBar, "&Help")
-menuHelp.append(idAbout, "&About\tF1")
+# type
+#   MenuId = enum
+#     idNew = 100, idLoad, idSave, idSaveAs, idExit,
+# 	idAbout
+
+# let menuFile = Menu(menuBar, "&File")
+# menuFile.append(idNew, "&New")
+# menuFile.append(idLoad, "&Load")
+# menuFile.append(idSave, "&Save\tCtrl+S")
+# menuFile.append(idSaveAs, "S&ave As...")
+# menuFile.appendSeparator()
+# menuFile.append(idExit, "E&xit\tCtrl+Q", "Exit the program.")
+
+# let menuHelp = Menu(menuBar, "&Help")
+# menuHelp.append(idAbout, "&About\tF1")
   
-let statusBar = StatusBar(frame)
+# let statusBar = StatusBar(frame)
 
-let notebook = NoteBook(frame)
-notebook.addPage("console")
-notebook.addPage("stack")
-notebook.addPage("vocabulary")
+# let notebook = NoteBook(frame)
+# notebook.addPage("console")
+# notebook.addPage("stack")
+# notebook.addPage("vocabulary")
 
-frame.show()
-app.mainLoop()
+# frame.show()
+# app.mainLoop()
 
