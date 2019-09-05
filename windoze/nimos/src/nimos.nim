@@ -1,6 +1,10 @@
 # This is just an example to get you started. A typical binary package
 # uses this file as the main entry point of the application.
 
+import winim
+
+discard MessageBox(0, "Hello World", "Nim", MB_ICONEXCLAMATION or MB_OK)
+
 when isMainModule:
   echo("Hello, World!")
 
@@ -16,7 +20,8 @@ echo "Hello","world",1,3.4
 # https://github.com/khchen/winim
 # import winim/lean
 
-import anygui
+#import anygui
+import V:/src/anygui
 
 echo anygui.backend()
 
