@@ -24,6 +24,24 @@ let app = App()
 let frame = Frame(title= $exe & ' ' & $args)
 frame.icon = Icon("", 0)
 
+let menuBar = MenuBar(frame)
+
+type
+  MenuId = enum
+    idNew = 100, idLoad, idSave, idSaveAs, idExit,
+	idAbout
+
+let menuFile = Menu(menuBar, "&File")
+menuFile.append(idNew, "&New")
+menuFile.append(idLoad, "&Load")
+menuFile.append(idSave, "&Save\tCtrl+S")
+menuFile.append(idSaveAs, "S&ave As...")
+menuFile.appendSeparator()
+menuFile.append(idExit, "E&xit\tCtrl+Q", "Exit the program.")
+
+let menuHelp = Menu(menuBar, "&Help")
+menuHelp.append(idAbout, "&About\tF1")
+  
 let statusBar = StatusBar(frame)
 
 let notebook = NoteBook(frame)
