@@ -11,7 +11,13 @@ import os
 
 let window = newWindow($ os.getAppFilename())
 
-let ide = newLayoutContainer(Layout_Horizontal) ; window.add(ide)
+let carr = newLayoutContainer(Layout_Vertical) ; window.add(carr)
+
+let btn = newLayoutContainer(Layout_Horizontal) ; carr.add(btn)
+
+let about = newButton("About") ; btn.add(about)
+
+let ide = newLayoutContainer(Layout_Horizontal) ; carr.add(ide)
 
 let ostab = newLayoutContainer(Layout_Vertical) ; ide.add(ostab)
 
