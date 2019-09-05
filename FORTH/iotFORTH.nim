@@ -4,30 +4,32 @@
 # https://forum.nim-lang.org/t/5164
 
 
-type                                ## IoT 16bit
-    cell  =  int16                  # \ 64K limited
-    ucell = uint16                  # / for tiny MCUs
+type                                    ## IoT 16bit
+    cell  =  int16                      # \ 64K limited
+    ucell = uint16                      # / for tiny MCUs
     byte  = uint8
 
-const                               ## memory sizes
-    Msz = 1 shl 0xC                 # main memory, bytes
-    Rsz = 1 shl 0x8                 # return stack size, cells
-    Dsz = 1 shl 0x4                 # data stack size, cells
+const                                   ## memory sizes
+    Msz = 1'u16 shl 0xC                 # main memory, bytes
+    Rsz = 1'u16 shl 0x8                 # return stack size, cells
+    Dsz = 1'u8  shl 0x4                 # data stack size, cells
 
-const
-    Mmsk = Msz-1
-    Rmsk = Rsz-1
-    Dmsk = Dsz-1
-    cellsz = sizeof(ucell)
+type                                    ## limited pointer types
+    mp = range[0'u16..Msz-1]
+    rp = ucell # range[0..Rsz-1]
+    dp =  byte # range[0..Dsz-1]
+                                        # wrapped operators
+proc `+`(a:mp,b:int):mp =
+    result = a + mp(b)
+    assert result < high(mp)
+    
+import os,strutils
 
-echo "\nMsz:",Msz,"  Rsz:",Rsz,"  Dsz:",Dsz,  "\n"
+proc log(args:varargs[string,`$`]) = stdout.write(args)
 
-import strutils
+log getAppFilename()
 
-echo "Mmsk:",Mmsk.toBin(cellsz shl 3)
-echo "Rmsk:",Rmsk.toBin(cellsz shl 3)
-echo "Dmsk:",Dmsk.toBin(cellsz shl 3)
-echo ' '
+log "\nMsz:",Msz,"  Rsz:",Rsz,"  Dsz:",Dsz,  "\n"
 
 type                                # bytecode commands
     op = enum # opcode
@@ -51,49 +53,62 @@ type                                # bytecode commands
         bye     = (0xFF,"bye")
 
 var                                 ## program/data memory
-    M : array[Msz,byte  ]           # bytecode area
-    Cp = ucell(0)                   # instruction pointer
-    Ip = ucell(0)                   # compiler pointer
+    M : array[mp,byte]              # bytecode area
+    Cp = mp(0)                      # instruction pointer
+    Ip = mp(0)                      # compiler pointer
 const init =                        # initial program
     [nop,bye]
 var                                 # data stack
-    D : array[Dsz,int16 ]
-    Dp = byte(0)
+    D : array[Dsz,cell]
+    Dp = dp(0)
 var                                 # return stack
-    R : array[Rsz,cell  ]
-    Rp = ucell(0)
+    R : array[Rsz,mp]
+    Rp = rp(0)
 
-echo "init:",init
-
-proc store(a:ucell,b:byte) =
+log "\ninit:",init
+                                    # store to M[]
+proc store(a:mp,b:byte) =
     M[a] = b
-proc store(a:ucell,b:ucell) =
-    M[a+0] = byte(b shr 0)
-    M[a+1] = byte(b shr 8)
-
-proc compile(b:byte):ucell =
+proc store(a:mp,b:ucell) =
+    M[a+0] = cast[byte](b shr 0)
+    M[a+1] = cast[byte](b shr 8)
+proc store(a:mp,b:mp) =
+    store(a,ucell(b))
+                                    # compile to end of used M[]
+proc compile(b:byte):mp =
     let Csave = Cp
-    store(Cp,b) ; Cp += ucell(sizeof(b))
+    store(Cp,b) ; inc Cp
     return Csave
-proc compile(c:ucell):ucell =
+proc compile(a:mp):mp =
     let Csave = Cp
-    store(Cp,c) ; Cp += ucell(sizeof(c))
+    store(Cp,a) ; Cp += mp(sizeof(a))
     return Csave
-proc compile(bc:op):ucell = compile(byte(bc))
+proc compile(bc:op):mp = compile(byte(bc))
     
                                     ## compile bytecode header
 discard     compile(byte(op.jmp))   # zero jmp
-let entry = compile(ucell(0))       # to program entry point
-let lfa   = compile(ucell(0))       # last defined word LFA
+let entry = compile(mp(0))          # to program entry point
+let lfa   = compile(mp(0))          # last defined word LFA
 
 store(entry,Cp)                     # run init[] program from here
 for i in 0..init.len-1:
     discard compile(init[i])
 
-echo "M:",M[0..Cp-1] ; echo "Cp:",Cp ; echo "Ip:",Ip
+log "\nM:",M[0..uint16(Cp)-1] , "\nCp:",Cp , "\tIp:",Ip, '\n'
 
-proc DROP() = assert(Dp > byte(0)) ; Dp -= byte(1)
+proc NOP() = discard
+proc BYE() = log '\n' ; quit(0)
+proc JMP() = Ip = M[Ip] ; log '\t',Ip.toHex
+
+proc DROP() = dec Dp
 
 proc VM() =
-    discard
+    while true:
+        var bc = M[Ip] ; inc Ip
+        log '\n',int(Ip).toHex(4),'\t',$op(bc)
+        case (bc):
+            of ord(nop): NOP()
+            of ord(bye): BYE()
+            of ord(jmp): JMP()
+            else: quit(-1)
 VM()
