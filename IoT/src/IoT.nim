@@ -11,11 +11,14 @@ import os
 
 let window = newWindow($ os.getAppFilename())
 
+window.iconPath = "IoT.png"
+
 let carr = newLayoutContainer(Layout_Vertical) ; window.add(carr)
 
 let btn = newLayoutContainer(Layout_Horizontal) ; carr.add(btn)
 
 let about = newButton("About") ; btn.add(about)
+about.onClick = proc(event: ClickEvent) = window.alert("IoT platform")
 
 let ide = newLayoutContainer(Layout_Horizontal) ; carr.add(ide)
 
