@@ -1,1 +1,1 @@
-@gvim -p src/nimos.nim nimos.nimble bat.bat .gitignore
+@gvim -p src/nimos.nim nimos.nimble Makefile bat.bat .gitignore
