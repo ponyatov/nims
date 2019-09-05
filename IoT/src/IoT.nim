@@ -44,7 +44,9 @@ let log = newTextArea() ; cli.add(log) ; log.addLine "log"
 
 window.onResize = proc(event: ResizeEvent) =
   echo window.width
-  ostab.width = max(111, window.width div 5 )
+  if window.width < 444: window.width = 444
+  if window.height < 333: window.height = 333
+  ostab.width = max(222, window.width div 5 )
   words.width = max(111, window.width div 5 )
   stack.height = window.height div 2
 
