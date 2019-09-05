@@ -13,3 +13,4 @@ bin           = @["IoT"]
 # Dependencies
 
 requires "nim >= 0.20.2"
+requires "nigui"
