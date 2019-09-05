@@ -12,5 +12,5 @@ backend       = "cpp"
 # Dependencies
 
 requires "nim >= 0.20.2"
-requires "winim"
-
+# requires "winim"
+requires "wNim"
