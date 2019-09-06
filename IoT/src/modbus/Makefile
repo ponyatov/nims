@@ -12,16 +12,15 @@ NIMS  = modbus.c.nim
 
 lib: $(NIMS)
 
-modbus.c.nim: $(CWD)/build/src/modbus.c.*.gimple gimple2nim Makefile
-	echo ./gimple2nim < $< > $@
+modbus.c.nim: $(CWD)/build/src/modbus.c.004t.gimple ./gimple2nim Makefile
+	./gimple2nim < $< > $@
 
-gimple2nim: gimple2nim.lex.c
-	cc -o $@ $^
-gimple2nim.lex.c: gimple2nim.lex
+./gimple2nim: gimple2nim_lex.cpp gimple2nim_yacc.cpp
+	g++ -o $@ $^
+gimple2nim_lex.cpp: gimple2nim.lex
 	flex -o $@ $<
-
-%.nim: $(CWD)/build/src/%.*.gimple ./gimple2nim Makefile
-	echo ./gimple2nim < $< > $@
+gimple2nim_yacc.cpp: gimple2nim.yacc
+	bison -o $@ $<
 
 MODBUS_CFG = CFLAGS='-O0 -fdump-tree-gimple'\
 				--prefix=$(LIB) --disable-shared --enable-static \
