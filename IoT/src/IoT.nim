@@ -15,7 +15,7 @@ import os
 
 let window = newWindow($ os.getAppFilename())
 
-window.iconPath = "IoT.png"
+window.iconPath = getAppDir() & "/IoT.png"
 
 let inner = newLayoutContainer(Layout_Vertical) ; window.add(inner)
 
