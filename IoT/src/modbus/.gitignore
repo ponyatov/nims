@@ -3,5 +3,5 @@ build/
 prefix/
 gimple2nim
 gimple2nim.exe
-gimple2nim_*.c*
+gimple2nim_*.?pp
 *.c.nim
