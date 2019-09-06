@@ -1,5 +1,7 @@
 libmodbus-3*
 build/
 prefix/
+gimple2nim
+gimple2nim.exe
 gimple2nim.*.c*
 *.c.nim

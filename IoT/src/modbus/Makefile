@@ -18,7 +18,7 @@ modbus.c.nim: $(CWD)/build/src/modbus.c.*.gimple gimple2nim Makefile
 gimple2nim: gimple2nim.lex.c
 	cc -o $@ $^
 gimple2nim.lex.c: gimple2nim.lex
-	flex -o $< $@
+	flex -o $@ $<
 
 %.nim: $(CWD)/build/src/%.*.gimple ./gimple2nim Makefile
 	echo ./gimple2nim < $< > $@
