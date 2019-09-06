@@ -3,6 +3,10 @@
 
 import IoTpkg/submodule
 
+import anygui
+
+echo anygui.backend()
+
 import nigui
 
 app.init()
