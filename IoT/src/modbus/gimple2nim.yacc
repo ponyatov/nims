@@ -2,9 +2,15 @@
     #include "gimple2nim.hpp"
 %}
 %defines %union { char *c; }
-%token <c> SYM
+%token <c> SYM LP RP LC RC LQ RQ
+%type <c> ex
 %%
-REPL : | REPL SYM { cout << $2 << endl; }
+REPL :
+    | REPL LC RC
+    | REPL SYM LP   { cout << "\n< proc " << $2 << " >\n"; }
+    | REPL ex       { cout << "\n<" << $2 << ">\n"; }
+ex: SYM
+ex: LP | RP
 %%
 
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"

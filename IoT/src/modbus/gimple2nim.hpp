@@ -11,4 +11,6 @@ extern int yyparse();
 extern void yyerror(string);
 #include "gimple2nim_yacc.hpp"
 
+#define TOC(C) { yylval.c = yytext; return C; }
+
 #endif // _H_GIMPLE2NIM
