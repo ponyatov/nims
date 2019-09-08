@@ -4,3 +4,5 @@ nimple_*
 libmodbus-3.1.6/
 build/
 prefix/
+*.003t.original
+*.004t.gimple

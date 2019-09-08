@@ -10,9 +10,17 @@ MODBUS_GZ	= $(MODBUS).tar.gz
 MAKE  ?= make
 MAKEJ  = $(MAKE) -j$(shell grep proc /proc/cpuinfo|wc -l)
 
-MODBUS_CFG = CFLAGS='-O0 -fdump-tree-gimple'\
+GIMPLE		= -O0 -fdump-tree-gimple -fdump-tree-original
+GIMPLE_CFG	= CFLAGS="$(GIMPLE)"
+
+sample/hello_c: sample/hello.c sample/Makefile Makefile
+	$(MAKE) -C sample CFLAGS="$(GIMPLE)"
+
+MODBUS_CFG = $(GIMPLE_CFG) \
 				--prefix=$(LIB) --disable-shared --enable-static \
 				--disable-tests --without-documentation
+
+modbus: $(LIB)/lib/libmodbus.a
 
 $(LIB)/lib/libmodbus.a: $(CWD)/$(MODBUS)/configure
 	rm -rf $(CWD)/build ; mkdir $(CWD)/build ; cd $(CWD)/build ; \

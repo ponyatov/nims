@@ -22,7 +22,7 @@ gimple2nim_lex.cpp: gimple2nim.lex
 gimple2nim_yacc.cpp: gimple2nim.yacc
 	bison -o $@ $<
 
-MODBUS_CFG = CFLAGS='-O0 -fdump-tree-gimple'\
+MODBUS_CFG = CFLAGS='-O0 -fdump-tree-gimple' \
 				--prefix=$(LIB) --disable-shared --enable-static \
 				--disable-tests --without-documentation \
 			
