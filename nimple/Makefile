@@ -13,7 +13,10 @@ MAKEJ  = $(MAKE) -j$(shell grep proc /proc/cpuinfo|wc -l)
 GIMPLE		= -O0 -fdump-tree-gimple -fdump-tree-original
 GIMPLE_CFG	= CFLAGS="$(GIMPLE)"
 
-sample/hello_c: sample/hello.c sample/Makefile Makefile
+sample/hello.c.004t.nimple: sample/hello.c.004t.gimple nimple 
+	./nimple < $< > $@
+
+sample/hello.c.004t.gimple: sample/hello.c sample/Makefile Makefile
 	$(MAKE) -C sample CFLAGS="$(GIMPLE)"
 
 MODBUS_CFG = $(GIMPLE_CFG) \

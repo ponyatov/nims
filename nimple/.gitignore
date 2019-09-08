@@ -6,3 +6,4 @@ build/
 prefix/
 *.003t.original
 *.004t.gimple
+*.004t.nimple
