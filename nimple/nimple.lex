@@ -1,5 +1,5 @@
 %{
-    #include "gimple2nim.hpp"
+    #include "nimple.hpp"
     unsigned int curl=0;
 %}
 %option noyywrap yylineno
