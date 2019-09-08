@@ -33,10 +33,10 @@ $(LIB)/lib/libmodbus.a: $(CWD)/$(MODBUS)/configure
 	rm -rf $(CWD)/build ; mkdir $(CWD)/build ; cd $(CWD)/build ; \
 	$< $(MODBUS_CFG) && $(MAKEJ) && $(MAKE) install
 
-$(CWD)/$(MODBUS)/configure: $(CWD)/$(MODBUS)/README.rst
+$(CWD)/$(MODBUS)/configure: $(CWD)/$(MODBUS)/README.md
 	cd $(MODBUS) ; sh autogen.sh
 
-$(CWD)/$(MODBUS)/README.rst: $(GZ)/$(MODBUS_GZ)
+$(CWD)/$(MODBUS)/README.md: $(GZ)/$(MODBUS_GZ)
 	tar zx < $< && touch $@
 
 $(GZ)/$(MODBUS_GZ): 
