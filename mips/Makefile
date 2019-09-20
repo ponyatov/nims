@@ -1,4 +1,4 @@
-WRT			= $(HOME)/openwrt-18.06.4
+WRT			= $(HOME)/ICBLINK/openwrt-18.06.4
 STAGING		= $(WRT)/staging_dir
 TOOLCHAIN	= $(STAGING)/toolchain-mipsel_24kc_gcc-7.3.0_musl
 XPATH		= PATH=$(TOOLCHAIN)/bin:$(PATH) STAGING_DIR=$(STAGING)
@@ -28,14 +28,14 @@ debug: hello_nim
 					-ex "set remote exec-file /tmp/$<" \
 					-ex "run" $<
 remote:
-	ssh root@$(IP) $(GDB_FORWARDING) 'gdbserver --multi $(IP_FORWARDING):$(PORT)'
+	xterm -e ssh root@$(IP) $(GDB_FORWARDING) 'gdbserver --multi $(IP_FORWARDING):$(PORT)'
 
-hello_c: hello.c Makefile
+hello_c: src/hello.c Makefile
 	$(XPATH) $(CC) -o $@ $<
 	file $@ ; ls -la $@
 	$(XPATH) $(SZ) $@
 
-hello_nim: hello.nim hello.nim.cfg Makefile
+hello_nim: src/hello.nim src/nim.cfg Makefile
 	$(XPATH) nim c -o:$@ $<
 	file $@ ; ls -la $@
 	$(XPATH) $(SZ) -x $@
