@@ -1,5 +1,5 @@
 %{
-    #include "gimple2nim.hpp"
+    #include "nimple.hpp"
 %}
 %defines %union { char *c; }
 %token <c> SYM LP RP LC RC LQ RQ

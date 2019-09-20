@@ -9,7 +9,7 @@ extern int yylineno;
 extern char *yytext;
 extern int yyparse();
 extern void yyerror(string);
-#include "gimple2nim_yacc.hpp"
+#include "nimple_yacc.hpp"
 
 #define TOC(C) { yylval.c = yytext; return C; }
 
