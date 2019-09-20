@@ -3,6 +3,15 @@
 
 import IoTpkg/submodule
 
+# import anygui
+# echo anygui.backend()
+
+import modbus/modbus
+
+import metaL
+
+let W = Frame("WORDS") ; echo $W
+
 import nigui
 
 app.init()
@@ -11,7 +20,7 @@ import os
 
 let window = newWindow($ os.getAppFilename())
 
-window.iconPath = "IoT.png"
+window.iconPath = getAppDir() & "/IoT.png"
 
 let inner = newLayoutContainer(Layout_Vertical) ; window.add(inner)
 
