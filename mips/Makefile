@@ -1,7 +1,7 @@
 OPENWRT		= $(HOME)/ICBLINK/openwrt-18.06.4
 STAGING		= $(OPENWRT)/staging_dir
 TOOLCHAIN	= $(STAGING)/toolchain-mipsel_24kc_gcc-7.3.0_musl
-XPATH		= PATH=$(TOOLCHAIN)/bin:$(PATH) STAGING_DIR=$(STAGING)
+XPATH		= PATH=$(TOOLCHAIN)/bin:$(PATH)
 
 LDCFLAGS		= $(TOOLCHAIN)/usr/lib
 LD_LIBRARY_PATH	= $(TOOLCHAIN)/usr/lib
