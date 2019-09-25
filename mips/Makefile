@@ -1,10 +1,12 @@
 OPENWRT		= $(HOME)/ICBLINK/openwrt-18.06.4
 STAGING		= $(OPENWRT)/staging_dir
 TOOLCHAIN	= $(STAGING)/toolchain-mipsel_24kc_gcc-7.3.0_musl
-XPATH		= PATH=$(TOOLCHAIN)/bin:$(PATH)
 
 LDCFLAGS		= $(TOOLCHAIN)/usr/lib
 LD_LIBRARY_PATH	= $(TOOLCHAIN)/usr/lib
+
+LIBRARY_PATH = $(TOOLCHAIN)/lib/gcc/mipsel-openwrt-linux-musl/7.3.0
+XPATH		= PATH=$(TOOLCHAIN)/bin:$(PATH) LIBRARY_PATH=$(LIBRARY_PATH)
 
 TARGET		= mipsel-openwrt-linux-musl
 
@@ -32,10 +34,10 @@ remote:
 
 hello_c: src/hello.c Makefile
 	$(XPATH) $(CC) -o $@ $<
-	file $@ ; ls -la $@
-	$(XPATH) $(SZ) $@
+	@file $@ ; ls -la $@
+	@$(XPATH) $(SZ) $@
 
 hello_nim: src/hello.nim src/nim.cfg Makefile
 	$(XPATH) nim c -o:$@ $<
-	file $@ ; ls -la $@
-	$(XPATH) $(SZ) -x $@
+	@file $@ ; ls -la $@
+	@$(XPATH) $(SZ) -x $@
