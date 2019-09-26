@@ -10,7 +10,7 @@ LD_LIBRARY_PATH	= $(TOOLCHAIN)/usr/lib
 
 TARGET			= mipsel-openwrt-linux-musl
 LIBRARY_PATH	= $(TOOLCHAIN)/lib/gcc/$(TARGET)/$(GCC_VER)
-XPATH 			= PATH=$(TOOLCHAIN)/bin:$(HOME)/.nimble/bin STAGING_DIR=$(STAGING)
+XPATH 			= PATH=$(TOOLCHAIN)/bin:$(TOOLCHAIN)/host/bin:$(HOME)/.nimble/bin STAGING_DIR=$(STAGING)
 
 CC  = $(TARGET)-gcc
 CXX = $(TARGET)-g++
@@ -38,7 +38,8 @@ hello_c: src/hello.c Makefile
 	@$(XPATH) $(SZ) $@
 
 hello_nim: src/hello.nim src/nim.cfg Makefile
-	$(XPATH) nim c -o:$@ $<
+	$(XPATH) nim cpp -o:$@ $<
 	@file $@ ; ls -la $@
 	@$(XPATH) $(SZ) -x $@
 	@$(XPATH) $(OD) -x $@ | grep -i GLIBC
+	@$(XPATH) $(OD) -x $@ | grep -i c++.so
